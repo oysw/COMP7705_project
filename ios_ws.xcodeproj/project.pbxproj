@@ -15,6 +15,7 @@
 		7F0D9BC82435CA7D0015DAE1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7F0D9BC62435CA7D0015DAE1 /* LaunchScreen.storyboard */; };
 		7F0D9BD32435CA7D0015DAE1 /* ios_wsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F0D9BD22435CA7D0015DAE1 /* ios_wsTests.swift */; };
 		7F0D9BDE2435CA7D0015DAE1 /* ios_wsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F0D9BDD2435CA7D0015DAE1 /* ios_wsUITests.swift */; };
+		7F0D9BEC24362C6A0015DAE1 /* GameBoardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F0D9BEB24362C6A0015DAE1 /* GameBoardViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +50,7 @@
 		7F0D9BD92435CA7D0015DAE1 /* ios_wsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ios_wsUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7F0D9BDD2435CA7D0015DAE1 /* ios_wsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ios_wsUITests.swift; sourceTree = "<group>"; };
 		7F0D9BDF2435CA7D0015DAE1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7F0D9BEB24362C6A0015DAE1 /* GameBoardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameBoardViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,6 +105,7 @@
 				7F0D9BBD2435CA7C0015DAE1 /* SceneDelegate.swift */,
 				7F0D9BBF2435CA7C0015DAE1 /* ViewController.swift */,
 				7F0D9BC12435CA7C0015DAE1 /* Main.storyboard */,
+				7F0D9BEB24362C6A0015DAE1 /* GameBoardViewController.swift */,
 				7F0D9BC42435CA7D0015DAE1 /* Assets.xcassets */,
 				7F0D9BC62435CA7D0015DAE1 /* LaunchScreen.storyboard */,
 				7F0D9BC92435CA7D0015DAE1 /* Info.plist */,
@@ -260,6 +263,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7F0D9BC02435CA7C0015DAE1 /* ViewController.swift in Sources */,
+				7F0D9BEC24362C6A0015DAE1 /* GameBoardViewController.swift in Sources */,
 				7F0D9BBC2435CA7C0015DAE1 /* AppDelegate.swift in Sources */,
 				7F0D9BBE2435CA7C0015DAE1 /* SceneDelegate.swift in Sources */,
 			);

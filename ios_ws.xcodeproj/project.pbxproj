@@ -16,6 +16,10 @@
 		7F0D9BD32435CA7D0015DAE1 /* ios_wsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F0D9BD22435CA7D0015DAE1 /* ios_wsTests.swift */; };
 		7F0D9BDE2435CA7D0015DAE1 /* ios_wsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F0D9BDD2435CA7D0015DAE1 /* ios_wsUITests.swift */; };
 		7F0D9BEC24362C6A0015DAE1 /* GameBoardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F0D9BEB24362C6A0015DAE1 /* GameBoardViewController.swift */; };
+		7F0D9BF3244C01010015DAE1 /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F0D9BEF244C01000015DAE1 /* Card.swift */; };
+		7F0D9BF4244C01010015DAE1 /* Deck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F0D9BF0244C01000015DAE1 /* Deck.swift */; };
+		7F0D9BF5244C01010015DAE1 /* TryCatchFinally.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F0D9BF1244C01010015DAE1 /* TryCatchFinally.m */; };
+		7F0D9BF6244C01010015DAE1 /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F0D9BF2244C01010015DAE1 /* Game.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +55,12 @@
 		7F0D9BDD2435CA7D0015DAE1 /* ios_wsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ios_wsUITests.swift; sourceTree = "<group>"; };
 		7F0D9BDF2435CA7D0015DAE1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7F0D9BEB24362C6A0015DAE1 /* GameBoardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameBoardViewController.swift; sourceTree = "<group>"; };
+		7F0D9BED244C01000015DAE1 /* ios_ws-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ios_ws-Bridging-Header.h"; sourceTree = "<group>"; };
+		7F0D9BEE244C01000015DAE1 /* TryCatchFinally.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TryCatchFinally.h; sourceTree = "<group>"; };
+		7F0D9BEF244C01000015DAE1 /* Card.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
+		7F0D9BF0244C01000015DAE1 /* Deck.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Deck.swift; sourceTree = "<group>"; };
+		7F0D9BF1244C01010015DAE1 /* TryCatchFinally.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TryCatchFinally.m; sourceTree = "<group>"; };
+		7F0D9BF2244C01010015DAE1 /* Game.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,10 +115,16 @@
 				7F0D9BBD2435CA7C0015DAE1 /* SceneDelegate.swift */,
 				7F0D9BBF2435CA7C0015DAE1 /* ViewController.swift */,
 				7F0D9BC12435CA7C0015DAE1 /* Main.storyboard */,
+				7F0D9BEF244C01000015DAE1 /* Card.swift */,
+				7F0D9BF0244C01000015DAE1 /* Deck.swift */,
+				7F0D9BF2244C01010015DAE1 /* Game.swift */,
+				7F0D9BEE244C01000015DAE1 /* TryCatchFinally.h */,
+				7F0D9BF1244C01010015DAE1 /* TryCatchFinally.m */,
 				7F0D9BEB24362C6A0015DAE1 /* GameBoardViewController.swift */,
 				7F0D9BC42435CA7D0015DAE1 /* Assets.xcassets */,
 				7F0D9BC62435CA7D0015DAE1 /* LaunchScreen.storyboard */,
 				7F0D9BC92435CA7D0015DAE1 /* Info.plist */,
+				7F0D9BED244C01000015DAE1 /* ios_ws-Bridging-Header.h */,
 			);
 			path = ios_ws;
 			sourceTree = "<group>";
@@ -199,6 +215,7 @@
 				TargetAttributes = {
 					7F0D9BB72435CA7C0015DAE1 = {
 						CreatedOnToolsVersion = 11.3;
+						LastSwiftMigration = 1130;
 					};
 					7F0D9BCD2435CA7D0015DAE1 = {
 						CreatedOnToolsVersion = 11.3;
@@ -262,10 +279,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7F0D9BF4244C01010015DAE1 /* Deck.swift in Sources */,
+				7F0D9BF5244C01010015DAE1 /* TryCatchFinally.m in Sources */,
 				7F0D9BC02435CA7C0015DAE1 /* ViewController.swift in Sources */,
 				7F0D9BEC24362C6A0015DAE1 /* GameBoardViewController.swift in Sources */,
+				7F0D9BF3244C01010015DAE1 /* Card.swift in Sources */,
 				7F0D9BBC2435CA7C0015DAE1 /* AppDelegate.swift in Sources */,
 				7F0D9BBE2435CA7C0015DAE1 /* SceneDelegate.swift in Sources */,
+				7F0D9BF6244C01010015DAE1 /* Game.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -438,6 +459,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = ios_ws/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -446,6 +468,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "HKUCS.ios-ws";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "ios_ws/ios_ws-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -455,6 +479,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = ios_ws/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -463,6 +488,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "HKUCS.ios-ws";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "ios_ws/ios_ws-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

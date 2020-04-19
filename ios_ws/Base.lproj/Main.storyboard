@@ -60,51 +60,81 @@
                                 <rect key="frame" x="49" y="192" width="40" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Card1"/>
+                                <connections>
+                                    <action selector="chooseCardWithSender:" destination="m56-k0-VEj" eventType="touchUpInside" id="JbE-pj-KVv"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cM1-3Z-fSI">
                                 <rect key="frame" x="136" y="192" width="42" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Card2"/>
+                                <connections>
+                                    <action selector="chooseCardWithSender:" destination="m56-k0-VEj" eventType="touchUpInside" id="9oD-gw-SCe"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QLc-bu-rzI">
                                 <rect key="frame" x="228" y="192" width="42" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Card3"/>
+                                <connections>
+                                    <action selector="chooseCardWithSender:" destination="m56-k0-VEj" eventType="touchUpInside" id="Js9-na-rif"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dgm-04-P8d">
                                 <rect key="frame" x="317" y="192" width="43" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Card4"/>
+                                <connections>
+                                    <action selector="chooseCardWithSender:" destination="m56-k0-VEj" eventType="touchUpInside" id="Ht6-QS-WUr"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gIM-fu-nug">
                                 <rect key="frame" x="49" y="286" width="30" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="+"/>
+                                <connections>
+                                    <action selector="operationWithSender:" destination="m56-k0-VEj" eventType="touchUpInside" id="a7u-IC-oE5"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Tcd-Ux-5Q9">
                                 <rect key="frame" x="98" y="286" width="30" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="-"/>
+                                <connections>
+                                    <action selector="operationWithSender:" destination="m56-k0-VEj" eventType="touchUpInside" id="nS8-8x-m0d"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4da-do-cBo">
                                 <rect key="frame" x="154" y="286" width="30" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="*"/>
+                                <connections>
+                                    <action selector="operationWithSender:" destination="m56-k0-VEj" eventType="touchUpInside" id="Dzn-Th-Hvg"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WKl-VD-BZC">
                                 <rect key="frame" x="207" y="286" width="30" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="/"/>
+                                <connections>
+                                    <action selector="operationWithSender:" destination="m56-k0-VEj" eventType="touchUpInside" id="Hoy-gI-fBI"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jOf-fm-dX8">
                                 <rect key="frame" x="267" y="286" width="30" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="("/>
+                                <connections>
+                                    <action selector="operationWithSender:" destination="m56-k0-VEj" eventType="touchUpInside" id="QYQ-RL-n9M"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CKQ-W2-drR">
                                 <rect key="frame" x="330" y="286" width="30" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title=")"/>
+                                <connections>
+                                    <action selector="operationWithSender:" destination="m56-k0-VEj" eventType="touchUpInside" id="YLK-jq-db9"/>
+                                </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="                                             " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tfC-lC-aVw">
                                 <rect key="frame" x="49" y="384" width="199" height="21"/>
@@ -118,6 +148,9 @@
                                 <rect key="frame" x="298" y="379" width="37" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Enter"/>
+                                <connections>
+                                    <action selector="enterResultWithSender:" destination="m56-k0-VEj" eventType="touchUpInside" id="waL-sx-q1r"/>
+                                </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Result: " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gey-cX-mDN">
                                 <rect key="frame" x="57" y="483" width="57" height="21"/>
@@ -151,17 +184,39 @@
                                 <rect key="frame" x="321" y="543" width="32" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Next"/>
+                                <connections>
+                                    <action selector="nextCardsWithSender:" destination="m56-k0-VEj" eventType="touchUpInside" id="ge1-Ya-Pq6"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ywh-Ud-xYZ">
                                 <rect key="frame" x="261" y="543" width="36" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Clear"/>
+                                <connections>
+                                    <action selector="clearInputWithSender:" destination="m56-k0-VEj" eventType="touchUpInside" id="AEJ-RH-Ifd"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <viewLayoutGuide key="safeArea" id="y6F-cn-mZd"/>
                     </view>
                     <navigationItem key="navigationItem" id="xyw-05-kPO"/>
+                    <connections>
+                        <outlet property="calResult" destination="hzm-Ci-lXp" id="0zm-iu-Nnt"/>
+                        <outlet property="calculation" destination="tfC-lC-aVw" id="E8x-eA-NdN"/>
+                        <outlet property="enterBtn" destination="efA-AL-gpW" id="8k9-BG-Z11"/>
+                        <outlet property="scoreLable" destination="buW-Ye-Nn9" id="KAA-QF-u39"/>
+                        <outletCollection property="cardButtons" destination="TmO-v6-tSB" collectionClass="NSMutableArray" id="FU8-gz-xed"/>
+                        <outletCollection property="cardButtons" destination="cM1-3Z-fSI" collectionClass="NSMutableArray" id="UIB-bA-7Ki"/>
+                        <outletCollection property="cardButtons" destination="QLc-bu-rzI" collectionClass="NSMutableArray" id="MaH-13-CWP"/>
+                        <outletCollection property="cardButtons" destination="dgm-04-P8d" collectionClass="NSMutableArray" id="PAe-bx-mFd"/>
+                        <outletCollection property="operButtons" destination="gIM-fu-nug" collectionClass="NSMutableArray" id="PFt-kS-pAl"/>
+                        <outletCollection property="operButtons" destination="Tcd-Ux-5Q9" collectionClass="NSMutableArray" id="YqA-5M-e9a"/>
+                        <outletCollection property="operButtons" destination="4da-do-cBo" collectionClass="NSMutableArray" id="HIl-88-UVG"/>
+                        <outletCollection property="operButtons" destination="WKl-VD-BZC" collectionClass="NSMutableArray" id="Tc4-Qo-LlF"/>
+                        <outletCollection property="operButtons" destination="jOf-fm-dX8" collectionClass="NSMutableArray" id="qzd-ud-48N"/>
+                        <outletCollection property="operButtons" destination="CKQ-W2-drR" collectionClass="NSMutableArray" id="OHL-iZ-yhi"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="I8u-JF-moh" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>

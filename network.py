@@ -8,11 +8,10 @@ import matplotlib.pyplot as plt
 
 from dataloader import dataloader
 
-# Model design
 
+# Model design
 def Net():
     model = models.Sequential()
-#     model.add(layers.Dense(1024, input_shape=(d_input,)))
     model.add(layers.Dense(1024))
     model.add(layers.BatchNormalization())
     model.add(layers.ELU())
@@ -26,8 +25,8 @@ def Net():
     model.compile(Adam(learning_rate=1e-6), "mse", ["acc"])
     return model
 
-# Training
 
+# Training
 def train(X, y, model):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
     history = model.fit(X_train, y_train, epochs=100, validation_data=(X_test, y_test))
@@ -52,7 +51,7 @@ def train(X, y, model):
 
 if __name__ == "__main__":
     # features, target = dataloader("GBM_barrier", "call", 1000, knock_type="out", barrier_type="down", barrier_price=90)
-    features, target = dataloader("GBMSA_AM", "call", sample_size=100)
+    features, target = dataloader("GBM_lookback", "call", 100, lookback_type="floating")
     features = np.array(features)
     target = np.array(target)
     model = Net()

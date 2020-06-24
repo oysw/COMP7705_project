@@ -1,4 +1,8 @@
 /__pycache__
+<<<<<<< HEAD
 /.idea
 /.ipynb_checkpoints
 /.vscode
+=======
+/venv
+>>>>>>> fc4deffd81807122d92a8903c1d57f4bd1c3da3c

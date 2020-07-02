@@ -67,7 +67,7 @@ if __name__ == "__main__":
     process_num = multiprocessing.cpu_count()
     option_type = ["call", "put"]
     option = ["AM", "EU"]
-    total_amount = 107400
+    total_amount = 1000000
     batch = 5
     batch_size = total_amount // batch // process_num
     print("Batch size is %s" % batch_size)

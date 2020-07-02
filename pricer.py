@@ -40,18 +40,18 @@ class GBM(Pricer):
         super().__init__(**kwargs)
         self.sigma = volatility
 
-    def stock_path(self, path_num=1000, step_num=1000):
+    def stock_path(self, path_num=1000):
         """
         @param path_num:
-        @param step_num:
         @return: Simulation of the stock price.
         [
-            path_1: [step_1, step_2, ......, step_num]
-            path_2: [step_1, step_2, ......, step_num]
+            path_1: [step_1, step_2, ......, step_n]
+            path_2: [step_1, step_2, ......, step_n]
             ......
-            path_num: [step_1, step_2, ......, step_num]
+            path_num: [step_1, step_2, ......, step_n]
         ]
         """
+        step_num = int(self.T * 365)
         shape = (path_num, step_num)
         paths = np.zeros(shape)
         paths[:, 0] = self.S0
@@ -85,22 +85,22 @@ class GBMSA(Pricer):
         self.sigma = volatility_of_variance
         self.v0 = initial_variance
 
-    def stock_path(self, path_num=1000, step_num=1000):
+    def stock_path(self, path_num=1000):
         """
         @param path_num:
-        @param step_num:
         @return: Simulation of the stock price.
         [
-            path_1: [step_1, step_2, ......, step_num]
-            path_2: [step_1, step_2, ......, step_num]
+            path_1: [step_1, step_2, ......, step_n]
+            path_2: [step_1, step_2, ......, step_n]
             ......
-            path_num: [step_1, step_2, ......, step_num]
+            path_num: [step_1, step_2, ......, step_n]
         ]
         """
         ln_st = np.log(self.S0)
         ln_vt = np.log(self.v0)
         vt = self.v0
-        delta_t = self.T / step_num
+        step_num = int(self.T * 365)
+        delta_t = 1 / 365
         shape = (path_num, step_num)
         es = np.random.standard_normal(shape)
         ev = self.rho * es + np.sqrt(1 - self.rho ** 2) * np.random.standard_normal(shape)
@@ -109,7 +109,7 @@ class GBMSA(Pricer):
             ln_st = ln_st + (self.r - 0.5 * vt) * delta_t + np.sqrt(vt) * np.sqrt(delta_t) * es[:, i]
             st = np.exp(ln_st)
             ln_vt = ln_vt + (1 / vt) * (self.kappa * (self.theta - vt) - 0.5 * self.sigma ** 2) * delta_t + \
-                    self.sigma * (1 / np.sqrt(vt)) * np.sqrt(delta_t) * ev[:, i]
+                self.sigma * (1 / np.sqrt(vt)) * np.sqrt(delta_t) * ev[:, i]
             vt = np.exp(ln_vt)
             path[:, i] = st
         return path
@@ -119,8 +119,8 @@ class GBM_EU(GBM):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-    def get(self, path_num=1000, step_num=1000):
-        paths = super().stock_path(path_num, step_num)
+    def get(self, path_num=1000):
+        paths = super().stock_path(path_num)
         return EU_Monte_Carlo(self, paths)
 
 
@@ -128,8 +128,8 @@ class GBM_AM(GBM):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-    def get(self, path_num=1000, step_num=1000):
-        paths = super().stock_path(path_num, step_num)
+    def get(self, path_num=1000):
+        paths = super().stock_path(path_num)
         return AM_Monte_Carlo(self, paths)
 
 
@@ -137,8 +137,8 @@ class GBMSA_EU(GBMSA):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-    def get(self, path_num=1000, step_num=1000):
-        paths = super().stock_path(path_num, step_num)
+    def get(self, path_num=1000):
+        paths = super().stock_path(path_num)
         return EU_Monte_Carlo(self, paths)
 
 
@@ -146,8 +146,8 @@ class GBMSA_AM(GBMSA):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-    def get(self, path_num=1000, step_num=1000):
-        paths = super().stock_path(path_num, step_num)
+    def get(self, path_num=1000):
+        paths = super().stock_path(path_num)
         return AM_Monte_Carlo(self, paths)
 
 
@@ -156,8 +156,8 @@ class GBM_barrier(GBM):
         self.calculator = barrier_Monte_Carlo(knock_type, barrier_type, barrier_price)
         super().__init__(**kwargs)
 
-    def get(self, path_num=1000, step_num=1000):
-        paths = super().stock_path(path_num, step_num)
+    def get(self, path_num=1000):
+        paths = super().stock_path(path_num)
         return self.calculator.get(self, paths)
 
 
@@ -166,8 +166,8 @@ class GBMSA_barrier(GBMSA):
         self.calculator = barrier_Monte_Carlo(knock_type, barrier_type, barrier_price)
         super().__init__(**kwargs)
 
-    def get(self, path_num=1000, step_num=1000):
-        paths = super().stock_path(path_num, step_num)
+    def get(self, path_num=1000):
+        paths = super().stock_path(path_num)
         return self.calculator.get(self, paths)
 
 
@@ -181,11 +181,11 @@ class GBM_gap(GBM):
         self.X1 = trigger_price_1
         self.X2 = trigger_price_2
 
-    def get(self, path_num=1000, step_num=1000):
+    def get(self, path_num=1000):
         """
         :return: The value of specified gap option
         """
-        paths = super().stock_path(path_num, step_num)
+        paths = super().stock_path(path_num)
         res = []
         for path in paths:
             temp = path
@@ -223,11 +223,11 @@ class GBM_lookback(GBM):
         super().__init__(**kwargs)
         self.lookback_type = lookback_type
 
-    def get(self, path_num=1000, step_num=1000):
+    def get(self, path_num=1000):
         """
         :return: The value of specified gap option
         """
-        paths = super().stock_path(path_num, step_num)
+        paths = super().stock_path(path_num)
         res = []
         for path in paths:
             temp = path
@@ -242,43 +242,3 @@ class GBM_lookback(GBM):
                 if self.option_type == 'call':
                     res.append(max(temp) - temp[-1])
         return np.exp(-self.r * self.T) * np.mean(res)
-
-
-if __name__ == "__main__":
-    model = [GBM_EU(initial_stock_price=100, strike_price=110, maturity=1,
-                    interest_rate=0.2, dividend_yield=0.1, option_type="call", volatility=0.2),
-
-             GBM_AM(initial_stock_price=100, strike_price=110, maturity=1,
-                    interest_rate=0.2, dividend_yield=0.1, option_type="call", volatility=0.2),
-
-             GBM_barrier(initial_stock_price=100, strike_price=100, maturity=1,
-                         interest_rate=0.2, dividend_yield=0.1, option_type="call", volatility=0.1,
-                         barrier_price=98, barrier_type="down", knock_type="in"),
-
-             GBMSA_EU(initial_stock_price=100, strike_price=110, maturity=1, interest_rate=0.2, dividend_yield=0.1,
-                      option_type="call", rate_of_mean_reversion=1,
-                      correlation_of_stock_variance=-0.4, long_term_variance=0.01,
-                      volatility_of_variance=0.02, initial_variance=0.01, ),
-
-             GBMSA_AM(initial_stock_price=100, strike_price=110, maturity=1, interest_rate=0.2, dividend_yield=0.1,
-                      option_type="call", rate_of_mean_reversion=1,
-                      correlation_of_stock_variance=-0.4, long_term_variance=0.01,
-                      volatility_of_variance=0.02, initial_variance=0.01, ),
-
-             GBMSA_barrier(initial_stock_price=100, strike_price=110, maturity=1,
-                           interest_rate=0.2, dividend_yield=0.1, option_type="call", rate_of_mean_reversion=1,
-                           correlation_of_stock_variance=-0.4, long_term_variance=0.01,
-                           volatility_of_variance=0.02, initial_variance=0.01,
-                           barrier_price=98, barrier_type="down", knock_type="in"),
-
-             GBM_gap(initial_stock_price=100, strike_price=110, trigger_price_1=110, trigger_price_2=120, maturity=1,
-                     interest_rate=0.2, dividend_yield=0.1, option_type="call", volatility=0.1),
-
-             GBM_lookback(initial_stock_price=100, strike_price=110, maturity=1,
-                          interest_rate=0.2, dividend_yield=0.1,
-                          volatility=0.1, option_type="call", lookback_type="fixed")]
-
-    for i in model:
-        print("call: " + str(i.get(2000, 2000)))
-        i.option_type = "put"
-        print("put: " + str(i.get(2000, 2000)))

@@ -1,9 +1,11 @@
 import numpy as np
 import pricer
 import copy
+import itertools
+import multiprocessing
 
 
-def dataloader(option, sample_size, path_num=1000, step_num=1000, **kwargs):
+def dataloader(option, sample_size, path_num=1000, **kwargs):
     model = 0
     param = dict()
     config = dict(**kwargs)
@@ -48,7 +50,7 @@ def dataloader(option, sample_size, path_num=1000, step_num=1000, **kwargs):
             if hasattr(pricer, option):
                 model = getattr(pricer, option)(**init_param)
             if model != 0:
-                target.append(model.get(path_num, step_num))
+                target.append(model.get(path_num))
     else:
         for i in range(sample_size):
             feature = list(var_param[:, i])
@@ -57,24 +59,40 @@ def dataloader(option, sample_size, path_num=1000, step_num=1000, **kwargs):
             if hasattr(pricer, option):
                 model = getattr(pricer, option)(**init_param)
             if model != 0:
-                target.append(model.get(path_num, step_num))
+                target.append(model.get(path_num))
     return features, target
 
 
 if __name__ == "__main__":
-    data = [
-        dataloader("GBM_EU", 100, path_num=2000, step_num=3000, option_type="call"),
-        dataloader("GBM_AM", 100, path_num=2000, step_num=3000, option_type="call"),
-        dataloader("GBM_barrier", 100, path_num=2000, step_num=3000, option_type="call", knock_type="out",
-                   barrier_type="down", barrier_price=90),
-        dataloader("GBMSA_EU", 100, path_num=2000, step_num=3000, option_type="call"),
-        dataloader("GBMSA_AM", 100, path_num=2000, step_num=3000, option_type="call"),
-        dataloader("GBMSA_barrier", 100, path_num=2000, step_num=3000, option_type="call", knock_type="out",
-                   barrier_type="down", barrier_price=90),
-        dataloader("GBM_gap", 100, path_num=2000, step_num=3000, option_type="call",
-                   trigger_price_1=120, trigger_price_2=110),
-        dataloader("GBM_lookback", 100, path_num=2000, step_num=3000, option_type="call",
-                   lookback_type="floating")
-    ]
-    for i in data:
-        print(i[0], i[1])
+    process_num = multiprocessing.cpu_count()
+    option_type = ["call", "put"]
+    option = ["AM", "EU"]
+    total_amount = 107400
+    batch = 5
+    batch_size = total_amount // batch // process_num
+    print("Batch size is %s" % batch_size)
+
+    for opt, opt_type in itertools.product(option, option_type):
+        print("Begin generating " + "GBM_"+ opt + " data")
+        times = 0
+        while times < batch:
+            p = multiprocessing.Pool(process_num)
+            result = []
+            for i in range(process_num):
+                result.append(p.apply_async(func=dataloader, args=("GBM_"+opt, batch_size), kwds={"option_type": opt_type}))
+            p.close()
+            p.join()
+            features = []
+            targets = []
+            for res in result:
+                feature, target = res.get()
+                features.extend(feature)
+                targets.extend(target)
+            features = np.array(features)
+            targets = np.array(targets)
+            with open("GBM_" + opt + "_" + opt_type + "_features.npy", "ab") as f:
+                np.save(f, features)
+            with open("GBM_" + opt + "_" + opt_type + "_targets.npy", "ab") as f:
+                np.save(f, targets)
+            times += 1
+            print("Batch %s has finished!" % times)

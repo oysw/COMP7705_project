@@ -43,5 +43,5 @@ def train(X, y, model):
 if __name__ == "__main__":
     # model = Net()
     # train(features, targets, model)
-    data = dataloader("GBMSA_EU", 1000, path_num=2000, option_type="call")
-    print(data)
+    data = dataloader("GBMSA_EU", 10, path_num=2000, option_type="call")
+    print(data[0])

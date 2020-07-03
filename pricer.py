@@ -173,7 +173,6 @@ class GBM_gap(GBM):
     """
     Gap option
     """
-
     def __init__(self, trigger_price_1, trigger_price_2, **kwargs):
         super().__init__(**kwargs)
         self.X1 = trigger_price_1

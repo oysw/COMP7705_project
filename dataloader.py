@@ -65,21 +65,22 @@ def dataloader(option, sample_size, path_num=1000, **kwargs):
 
 if __name__ == "__main__":
     process_num = multiprocessing.cpu_count()
+    asset_type = ["GBM", "GBMSA"]
     option_type = ["call", "put"]
     option = ["AM", "EU"]
-    total_amount = 1000000
-    batch = 5
+    total_amount = 800
+    batch = 1
     batch_size = total_amount // batch // process_num
     print("Batch size is %s" % batch_size)
 
-    for opt, opt_type in itertools.product(option, option_type):
-        print("Begin generating " + "GBM_"+ opt + " data")
+    for ass, opt, opt_type in itertools.product(asset_type, option, option_type):
+        print("Begin generating " + ass + "_"+ opt + " data")
         times = 0
         while times < batch:
             p = multiprocessing.Pool(process_num)
             result = []
             for i in range(process_num):
-                result.append(p.apply_async(func=dataloader, args=("GBM_"+opt, batch_size), kwds={"option_type": opt_type}))
+                result.append(p.apply_async(func=dataloader, args=(ass + "_" + opt, batch_size), kwds={"option_type": opt_type}))
             p.close()
             p.join()
             features = []
@@ -90,9 +91,9 @@ if __name__ == "__main__":
                 targets.extend(target)
             features = np.array(features)
             targets = np.array(targets)
-            with open("GBM_" + opt + "_" + opt_type + "_features.npy", "ab") as f:
+            with open(ass + "_" + opt + "_" + opt_type + "_features.npy", "ab") as f:
                 np.save(f, features)
-            with open("GBM_" + opt + "_" + opt_type + "_targets.npy", "ab") as f:
+            with open(ass + "_" + opt + "_" + opt_type + "_targets.npy", "ab") as f:
                 np.save(f, targets)
             times += 1
             print("Batch %s has finished!" % times)

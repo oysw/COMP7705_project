@@ -96,21 +96,19 @@ class GBMSA(Pricer):
             path_num: [step_1, step_2, ......, step_n]
         ]
         """
-        ln_st = np.log(self.S0)
-        ln_vt = np.log(self.v0)
+        st = self.S0
         vt = self.v0
         step_num = int(self.T * 365)
         delta_t = 1 / 365
         shape = (path_num, step_num)
-        es = np.random.standard_normal(shape)
-        ev = self.rho * es + np.sqrt(1 - self.rho ** 2) * np.random.standard_normal(shape)
+        w1 = np.sqrt(delta_t)*np.random.standard_normal(shape)
+        w2 = np.sqrt(delta_t)*np.random.standard_normal(shape)
         path = np.zeros(shape)
         for i in range(step_num):
-            ln_st = ln_st + (self.r - 0.5 * vt) * delta_t + np.sqrt(vt) * np.sqrt(delta_t) * es[:, i]
-            st = np.exp(ln_st)
-            ln_vt = ln_vt + (1 / vt) * (self.kappa * (self.theta - vt) - 0.5 * self.sigma ** 2) * delta_t + \
-                self.sigma * (1 / np.sqrt(vt)) * np.sqrt(delta_t) * ev[:, i]
-            vt = np.exp(ln_vt)
+            st = st + self.r*st*delta_t + np.sqrt(vt)*st*(self.rho*w1[:, i]+np.sqrt(1-self.rho**2)*w2[:, i])
+            vt = vt + self.kappa*(self.theta-vt)*delta_t + self.sigma*np.sqrt(vt)*w1[:, i]
+            st = np.where(st < 0, 0, st)
+            vt = np.where(vt < 0, 0, vt)
             path[:, i] = st
         return path
 

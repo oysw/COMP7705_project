@@ -40,6 +40,8 @@ def train(X, y, model):
     plt.show()
 
 
-# if __name__ == "__main__":
+if __name__ == "__main__":
     # model = Net()
     # train(features, targets, model)
+    data = dataloader("GBMSA_EU", 1000, path_num=2000, option_type="call")
+    print(data)

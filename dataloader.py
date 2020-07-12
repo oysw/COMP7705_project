@@ -84,11 +84,10 @@ def dataloader(option, sample_size, path_num=1000):
 
 
 if __name__ == "__main__":
-    # process_num = multiprocessing.cpu_count()
-    process_num = 1
+    process_num = multiprocessing.cpu_count()
     asset_type = ["GBM", "GBMSA"]
     option_type = ["EU", "AM", "barrier", "gap", "lookback"]
-    total_amount = 10
+    total_amount = 5000
     batch = 1
     batch_size = total_amount // batch // process_num
     print("Batch size is %s" % batch_size)

@@ -1,4 +1,3 @@
-# import ghalton
 import numpy as np
 from calculator import *
 

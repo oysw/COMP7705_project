@@ -10,7 +10,9 @@ import ghalton
 def dataloader(option, sample_size, path_num=1000):
     model = 0
     S0 = 100
-    gen = ghalton.GeneralizedHalton(sample_size)
+    seed = np.random.randint(100)
+    gen = ghalton.GeneralizedHalton(sample_size, seed)
+    gen.get(seed)
     keys = ("option", "type", "initial_stock_price", "strike_price", "maturity", "interest_rate", "dividend_yield",
     "volatility", "rate_of_mean_reversion", "correlation_of_stock_variance", "long_term_variance", "volatility_of_variance",
     "knock_type", "barrier_type", "barrier_price", "trigger_price_1", "trigger_price_2", "lookback_type")
@@ -86,25 +88,34 @@ def dataloader(option, sample_size, path_num=1000):
     return features, target
 
 
-if __name__ == "__main__":
+def generate(path, amount):
     process_num = multiprocessing.cpu_count()
     asset_type = ["GBM", "GBMSA"]
     option_type = ["EU", "AM", "barrier", "gap", "lookback"]
     keys = ("option", "type", "initial_stock_price", "strike_price", "maturity", "interest_rate", "dividend_yield",
     "volatility", "rate_of_mean_reversion", "correlation_of_stock_variance", "long_term_variance", "volatility_of_variance",
     "knock_type", "barrier_type", "barrier_price", "trigger_price_1", "trigger_price_2", "lookback_type")
-    data_df = pd.DataFrame(columns=keys)
-    if not os.path.isfile("gbmsa_data.csv"):
-        data_df.to_csv("gbmsa_data.csv", index=None)
-    if not os.path.isfile("gbm_data.csv"):
-        data_df.to_csv("gbm_data.csv", index=None)
-    label_df = pd.DataFrame(columns=["value"])
-    if not os.path.isfile("gbmsa_label.csv"):
-        label_df.to_csv("gbmsa_label.csv", index=None)
-    if not os.path.isfile("gbm_label.csv"):
-        label_df.to_csv("gbm_label.csv", index=None)
+    
+    if not os.path.exists(path):
+        os.makedirs(path)
 
-    total_amount = 16
+    gbmsa_data_path = os.path.join(path, "gbmsa_data.csv")
+    gbm_data_path = os.path.join(path, "gbm_data.csv")
+    gbmsa_label_path = os.path.join(path, "gbmsa_label.csv")
+    gbm_label_path = os.path.join(path, "gbm_label.csv")
+
+    data_df = pd.DataFrame(columns=keys)
+    if not os.path.isfile(gbmsa_data_path):
+        data_df.to_csv(gbmsa_data_path, index=None)
+    if not os.path.isfile(gbm_data_path):
+        data_df.to_csv(gbm_data_path, index=None)
+    label_df = pd.DataFrame(columns=["value"])
+    if not os.path.isfile(gbmsa_label_path):
+        label_df.to_csv(gbmsa_label_path, index=None)
+    if not os.path.isfile(gbm_label_path):
+        label_df.to_csv(gbm_label_path, index=None)
+
+    total_amount = amount
     batch_size = total_amount // process_num
 
     for ass, opt in itertools.product(asset_type, option_type):
@@ -123,11 +134,15 @@ if __name__ == "__main__":
             targets.extend(target)
         if ass == "GBMSA":
             data_df = pd.DataFrame(data=features)
-            data_df.to_csv("gbmsa_data.csv", mode="a", index=None, header=False)
+            data_df.to_csv(gbmsa_data_path, mode="a", index=None, header=False)
             label_df = pd.DataFrame(data=targets)
-            label_df.to_csv("gbmsa_label.csv", mode="a", index=None, header=False)
+            label_df.to_csv(gbmsa_label_path, mode="a", index=None, header=False)
         if ass == "GBM":
             data_df = pd.DataFrame(data=features)
-            data_df.to_csv("gbm_data.csv", mode="a", index=None, header=False)
+            data_df.to_csv(gbm_data_path, mode="a", index=None, header=False)
             label_df = pd.DataFrame(data=targets)
-            label_df.to_csv("gbm_label.csv", mode="a", index=None, header=False)
+            label_df.to_csv(gbm_label_path, mode="a", index=None, header=False)
+
+
+if __name__ == "__main__":
+    generate("result", 16)

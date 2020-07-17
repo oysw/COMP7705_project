@@ -88,14 +88,13 @@ def dataloader(option, sample_size, path_num=1000):
     return features, target
 
 
-def generate(path, amount):
+def generate(path, amount, batch_nums):
     process_num = multiprocessing.cpu_count()
-    asset_type = ["GBM", "GBMSA"]
-    option_type = ["EU", "AM", "barrier", "gap", "lookback"]
-    keys = ("option", "type", "initial_stock_price", "strike_price", "maturity", "interest_rate", "dividend_yield",
-    "volatility", "rate_of_mean_reversion", "correlation_of_stock_variance", "long_term_variance", "volatility_of_variance",
-    "knock_type", "barrier_type", "barrier_price", "trigger_price_1", "trigger_price_2", "lookback_type")
-    
+    # asset_type = ["GBM", "GBMSA"]
+    asset_type = ["GBM"]
+    # option_type = ["EU", "AM", "barrier", "gap", "lookback"]
+    option_type = ["AM"]
+
     if not os.path.exists(path):
         os.makedirs(path)
 
@@ -104,45 +103,37 @@ def generate(path, amount):
     gbmsa_label_path = os.path.join(path, "gbmsa_label.csv")
     gbm_label_path = os.path.join(path, "gbm_label.csv")
 
-    data_df = pd.DataFrame(columns=keys)
-    if not os.path.isfile(gbmsa_data_path):
-        data_df.to_csv(gbmsa_data_path, index=None)
-    if not os.path.isfile(gbm_data_path):
-        data_df.to_csv(gbm_data_path, index=None)
-    label_df = pd.DataFrame(columns=["value"])
-    if not os.path.isfile(gbmsa_label_path):
-        label_df.to_csv(gbmsa_label_path, index=None)
-    if not os.path.isfile(gbm_label_path):
-        label_df.to_csv(gbm_label_path, index=None)
+    batch_size = amount // batch_nums // process_num
+    print("Batch size is {}".format(batch_size))
 
-    total_amount = amount
-    batch_size = total_amount // process_num
-
-    for ass, opt in itertools.product(asset_type, option_type):
-        print("Begin generating " + ass + "_"+ opt + " data")
-        p = multiprocessing.Pool(process_num)
-        result = []
-        for i in range(process_num):
-            result.append(p.apply_async(func=dataloader, args=(ass + "_" + opt, batch_size)))
-        p.close()
-        p.join()
-        features = []
-        targets = []
-        for res in result:
-            feature, target = res.get()
-            features.extend(feature)
-            targets.extend(target)
-        if ass == "GBMSA":
-            data_df = pd.DataFrame(data=features)
-            data_df.to_csv(gbmsa_data_path, mode="a", index=None, header=False)
-            label_df = pd.DataFrame(data=targets)
-            label_df.to_csv(gbmsa_label_path, mode="a", index=None, header=False)
-        if ass == "GBM":
-            data_df = pd.DataFrame(data=features)
-            data_df.to_csv(gbm_data_path, mode="a", index=None, header=False)
-            label_df = pd.DataFrame(data=targets)
-            label_df.to_csv(gbm_label_path, mode="a", index=None, header=False)
+    for batch in range(batch_nums):
+        print("Batch {} begins!".format(batch))
+        for ass, opt in itertools.product(asset_type, option_type):
+            print("Begin generating " + ass + "_"+ opt + " data")
+            p = multiprocessing.Pool(process_num)
+            result = []
+            for i in range(process_num):
+                result.append(p.apply_async(func=dataloader, args=(ass + "_" + opt, batch_size)))
+            p.close()
+            p.join()
+            features = []
+            targets = []
+            for res in result:
+                feature, target = res.get()
+                features.extend(feature)
+                targets.extend(target)
+            if ass == "GBMSA":
+                data_df = pd.DataFrame(data=features)
+                data_df.to_csv(gbmsa_data_path, mode="a", index=None, header=False)
+                label_df = pd.DataFrame(data=targets)
+                label_df.to_csv(gbmsa_label_path, mode="a", index=None, header=False)
+            if ass == "GBM":
+                data_df = pd.DataFrame(data=features)
+                data_df.to_csv(gbm_data_path, mode="a", index=None, header=False)
+                label_df = pd.DataFrame(data=targets)
+                label_df.to_csv(gbm_label_path, mode="a", index=None, header=False)
+        print("Batch {} ends!".format(batch))
 
 
 if __name__ == "__main__":
-    generate("result", 16)
+    generate("result", 40000, 5)

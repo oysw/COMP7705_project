@@ -3,5 +3,6 @@
 /.ipynb_checkpoints
 /.vscode
 /venv
+/result
 *.npy
 *.csv

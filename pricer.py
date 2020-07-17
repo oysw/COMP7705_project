@@ -1,4 +1,6 @@
 import numpy as np
+import ghalton
+from scipy.stats import norm
 from calculator import *
 
 
@@ -49,14 +51,15 @@ class GBM(Pricer):
         ]
         """
         step_num = int(self.T * 365)
-        shape = (path_num, step_num)
-        paths = np.zeros(shape)
+        paths = np.zeros((path_num, step_num))
         paths[:, 0] = self.S0
         delta_t = self.T / step_num
-        Z = np.random.standard_normal(shape)
+        halton = ghalton.GeneralizedHalton(path_num)
+        Z = norm.ppf(halton.get(step_num)).T
         for i in range(1, step_num):
-            paths[:, i] = paths[:, i - 1] * np.exp((self.r - 0.5 * self.sigma ** 2) * delta_t +
-                                                   self.sigma * np.sqrt(delta_t) * Z[:, i])
+            paths[:, i] = paths[:, i - 1] * \
+                np.exp((self.r - 0.5 * self.sigma ** 2) * delta_t +\
+                    self.sigma * np.sqrt(delta_t) * Z[:, i])
         return paths
 
 
@@ -98,10 +101,12 @@ class GBMSA(Pricer):
         step_num = int(self.T * 365)
         delta_t = 1 / 365
         shape = (path_num, step_num)
-        w1 = np.sqrt(delta_t)*np.random.standard_normal(shape)
-        w2 = np.sqrt(delta_t)*np.random.standard_normal(shape)
+        halton = ghalton.GeneralizedHalton(path_num, 65)
+        w1 = np.sqrt(delta_t)*norm.ppf(halton.get(step_num)).T
+        w2 = np.sqrt(delta_t)*norm.ppf(halton.get(step_num)).T
         path = np.zeros(shape)
-        for i in range(step_num):
+        path[:, 0] = st
+        for i in range(1, step_num):
             st = st + self.r*st*delta_t + np.sqrt(vt)*st*(self.rho*w1[:, i]+np.sqrt(1-self.rho**2)*w2[:, i])
             vt = vt + self.kappa*(self.theta-vt)*delta_t + self.sigma*np.sqrt(vt)*w1[:, i]
             st = np.where(st < 0, 0, st)
@@ -114,18 +119,46 @@ class GBM_EU(GBM):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-    def get(self, path_num=1000):
-        paths = super().stock_path(path_num)
-        return EU_Monte_Carlo(self, paths)
+    def get(self, path_num):
+        d1 = (np.log(self.S0/self.K) + (self.r - self.q + 0.5*self.sigma**2)*self.T)/(self.sigma*np.sqrt(self.T))
+        d2 = d1 - self.sigma*np.sqrt(self.T)
+        if self.option_type == "call":
+            return self.S0 * np.exp(-self.q * self.T) * norm.cdf(d1) - self.K * np.exp(-self.r * self.T) * norm.cdf(d2)
+        elif self.option_type == "put":
+            return self.K*np.exp(-self.r * self.T)*norm.cdf(-d2) - self.S0*np.exp(-self.q*self.T)*norm.cdf(-d1)
 
 
 class GBM_AM(GBM):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-    def get(self, path_num=1000):
-        paths = super().stock_path(path_num)
-        return AM_Monte_Carlo(self, paths)
+    def get(self, path_num):
+        steps = 100
+        u = np.exp(self.sigma*np.sqrt(self.T/steps))
+        d = 1/u
+        P = (np.exp(self.r*self.T/steps)-d)/(u-d)
+        prices = np.zeros(steps + 1)
+        c_values = np.zeros(steps + 1)
+        prices[0]= self.S0*d**steps
+        if self.option_type == "call":
+            c_values[0]= max(prices[0]-self.K,0)
+            for i in range(1, steps+1):
+                prices[i] = prices[i-1]*(u**2)
+                c_values[i] = max(prices[i]-self.K,0)
+            for j in range(steps, 0, -1):
+                for i in range(0,j):
+                    prices[i]=prices[i+1]*d
+                    c_values[i] = max((P*c_values[i+1]+(1-P)*c_values[i])/np.exp(self.r*self.T/steps),prices[i]-self.K)
+        elif self.option_type == "put":
+            c_values[0] = max(self.K-prices[0],0)
+            for i in range(1, steps+1):
+                prices[i] = prices[i-1]*(u**2)
+                c_values[i] = max(self.K-prices[i],0)
+            for j in range(steps, 0, -1):
+                for i in range(0,j):
+                    prices[i]=prices[i+1]*d
+                    c_values[i] = max((P*c_values[i+1]+(1-P)*c_values[i])/np.exp(self.r*self.T/steps), self.K-prices[i])
+        return c_values[0]
 
 
 class GBM_barrier(GBM):

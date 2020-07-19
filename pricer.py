@@ -83,7 +83,7 @@ class GBMSA(Pricer):
         self.sigma = volatility_of_variance
         self.v0 = initial_variance
 
-    def stock_path(self, seed=0, path_num=1000):
+    def stock_path(self, path_num=1000):
         """
         @param path_num:
         @return: Simulation of the stock price.
@@ -99,7 +99,7 @@ class GBMSA(Pricer):
         step_num = int(self.T * 360)
         delta_t = 1 / 360
         shape = (path_num, step_num)
-        halton = ghalton.GeneralizedHalton(path_num, seed)
+        halton = ghalton.GeneralizedHalton(path_num, 65)
         w1 = np.sqrt(delta_t)*norm.ppf(halton.get(step_num)).T
         w2 = np.sqrt(delta_t)*norm.ppf(halton.get(step_num)).T
         path = np.zeros(shape)
@@ -167,17 +167,8 @@ class GBM_barrier(GBM):
         self.barrier_price = barrier_price
 
     def get(self, path_num=1000):
-        res = []
-        seed = 0
-        while path_num > 0:
-            if path_num > 1000:
-                paths = super().stock_path(seed, 1000)
-            else:
-                paths = super().stock_path(seed, path_num)
-            res.append(barrier_Monte_Carlo(self, paths))
-            path_num -= 1000
-            seed += 1
-        return np.mean(res)
+        paths = super().stock_path(path_num)
+        return barrier_Monte_Carlo(self, paths)
 
 
 class GBM_gap(GBM):
@@ -193,17 +184,8 @@ class GBM_gap(GBM):
         """
         :return: The value of specified gap option
         """
-        res = []
-        seed = 0
-        while path_num > 0:
-            if path_num > 1000:
-                paths = super().stock_path(seed, 1000)
-            else:
-                paths = super().stock_path(seed, path_num)
-            res.append(gap_Monte_Carlo(self, paths))
-            path_num -= 1000
-            seed += 1
-        return np.mean(res)
+        paths = super().stock_path(path_num)
+        return gap_Monte_Carlo(self, paths)
 
 
 class GBM_lookback(GBM):
@@ -218,17 +200,8 @@ class GBM_lookback(GBM):
         """
         :return: The value of specified gap option
         """
-        res = []
-        seed = 0
-        while path_num > 0:
-            if path_num > 1000:
-                paths = super().stock_path(seed, 1000)
-            else:
-                paths = super().stock_path(seed, path_num)
-            res.append(lookback_Monte_Carlo(self, paths))
-            path_num -= 1000
-            seed += 1
-        return np.mean(res)
+        paths = super().stock_path(path_num)
+        return lookback_Monte_Carlo(self, paths)
 
 
 class GBMSA_EU(GBMSA):
@@ -236,17 +209,8 @@ class GBMSA_EU(GBMSA):
         super().__init__(**kwargs)
 
     def get(self, path_num=1000):
-        res = []
-        seed = 0
-        while path_num > 0:
-            if path_num > 1000:
-                paths = super().stock_path(seed, 1000)
-            else:
-                paths = super().stock_path(seed, path_num)
-            res.append(EU_Monte_Carlo(self, paths))
-            path_num -= 1000
-            seed += 1
-        return np.mean(res)
+        paths = super().stock_path(path_num)
+        return EU_Monte_Carlo(self, paths)
 
 
 class GBMSA_AM(GBMSA):
@@ -254,17 +218,8 @@ class GBMSA_AM(GBMSA):
         super().__init__(**kwargs)
 
     def get(self, path_num=1000):
-        res = []
-        seed = 0
-        while path_num > 0:
-            if path_num > 1000:
-                paths = super().stock_path(seed, 1000)
-            else:
-                paths = super().stock_path(seed, path_num)
-            res.append(AM_Monte_Carlo(self, paths))
-            path_num -= 1000
-            seed += 1
-        return np.mean(res)
+        paths = super().stock_path(path_num)
+        return AM_Monte_Carlo(self, paths)
 
 
 class GBMSA_barrier(GBMSA):
@@ -275,17 +230,8 @@ class GBMSA_barrier(GBMSA):
         self.barrier_price = barrier_price
 
     def get(self, path_num=1000):
-        res = []
-        seed = 0
-        while path_num > 0:
-            if path_num > 1000:
-                paths = super().stock_path(seed, 1000)
-            else:
-                paths = super().stock_path(seed, path_num)
-            res.append(barrier_Monte_Carlo(self, paths))
-            path_num -= 1000
-            seed += 1
-        return np.mean(res)
+        paths = super().stock_path(path_num)
+        return barrier_Monte_Carlo(self, paths)
 
 
 class GBMSA_gap(GBMSA):
@@ -301,17 +247,8 @@ class GBMSA_gap(GBMSA):
         """
         :return: The value of specified gap option
         """
-        res = []
-        seed = 0
-        while path_num > 0:
-            if path_num > 1000:
-                paths = super().stock_path(seed, 1000)
-            else:
-                paths = super().stock_path(seed, path_num)
-            res.append(gap_Monte_Carlo(self, paths))
-            path_num -= 1000
-            seed += 1
-        return np.mean(res)
+        paths = super().stock_path(path_num)
+        return gap_Monte_Carlo(self, paths)
 
 
 class GBMSA_lookback(GBMSA):
@@ -326,14 +263,5 @@ class GBMSA_lookback(GBMSA):
         """
         :return: The value of specified gap option
         """
-        res = []
-        seed = 0
-        while path_num > 0:
-            if path_num > 1000:
-                paths = super().stock_path(seed, 1000)
-            else:
-                paths = super().stock_path(seed, path_num)
-            res.append(lookback_Monte_Carlo(self, paths))
-            path_num -= 1000
-            seed += 1
-        return np.mean(res)
+        paths = super().stock_path(path_num)
+        return lookback_Monte_Carlo(self, paths)

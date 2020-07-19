@@ -423,7 +423,7 @@ class MonteCarloOptionPricing:
             self.intrinsic_val = np.maximum((self.K - self.price_array), 0.0)
 
         self.terminal_profit = np.where(np.sum(self.check_final, axis=1) >= 1, self.intrinsic_val[:, -1], 0)
-
+        
         self.expectation = np.mean(self.terminal_profit * np.exp(-np.sum(self.r, axis=1) * self.T))
         self.standard_error = np.std(self.terminal_profit) / np.sqrt(len(self.terminal_profit))
 

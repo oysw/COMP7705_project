@@ -1,41 +1,36 @@
 from pricer import *
 from calculator import *
 import numpy as np
-import ghalton
-from scipy.stats import norm
-import multiprocessing
 
-
-gbm_model = GBM_AM(
+gbm_model = GBM_lookback(
     initial_stock_price=100, 
-    strike_price=110, 
-    maturity=182/365,
-    interest_rate=0.02,
+    strike_price=95, 
+    maturity=182/360,
+    interest_rate=0.05,
     dividend_yield=0,
     option_type="put",
-    volatility=0.1,
+    volatility=0.2,
     # knock_type="in",
-    # barrier_type="down",
+    # barrier_type="up",
     # barrier_price=97,
+    lookback_type="floating"
     )
 
-paths = gbm_model.stock_path(10000)
-res = AM_Monte_Carlo(gbm_model, paths)
-print(res)
-# from net import MonteCarloOptionPricing
-# model = MonteCarloOptionPricing(
-#     gbm_model.r, 
-#     gbm_model.S0,
-#     gbm_model.K,
-#     gbm_model.T,
-#     gbm_model.r,
-#     gbm_model.sigma,
-#     no_of_slices=gbm_model.T*360
-#     )
-# model.stock_price_simulation()
-# print(model.american_option_monte_carlo(option_type="put"))
-
-print(gbm_model.get(30000))
+from net import MonteCarloOptionPricing
+model = MonteCarloOptionPricing(
+    gbm_model.r, 
+    gbm_model.S0,
+    gbm_model.K,
+    gbm_model.T,
+    gbm_model.r,
+    gbm_model.sigma,
+    no_of_slices=gbm_model.T*360,
+    simulation_rounds=50000,
+    fix_random_seed=True
+    )
+model.stock_price_simulation()
+print(model.LookBackEuropean(gbm_model.option_type))
+print(lookback_Monte_Carlo(gbm_model, model.price_array))
 # gbmsa_model = GBMSA_AM(
 #     initial_stock_price=100, 
 #     strike_price=110, 

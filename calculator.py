@@ -41,61 +41,37 @@ def AM_Monte_Carlo(model, paths):
 
 def barrier_Monte_Carlo(model, paths):
     price = 0
+    step_num = paths.shape[1]
     if model.knock_type == "in":
+        check = np.full(paths.shape[0], False)
         if model.barrier_type == "up":
-            res = []
-            for path in paths:
-                if path[np.where(path >= model.barrier_price)].size == 0:
-                    res.append(0)
-                else:
-                    if model.option_type == "call":
-                        res.append(max(path[-1] - model.K, 0))
-                    elif model.option_type == "put":
-                        res.append(max(model.K - path[-1], 0))
-            if res:
-                price = np.mean(res)
-        elif model.barrier_type == "down":
-            res = []
-            for path in paths:
-                if path[np.where(path <= model.barrier_price)].size == 0:
-                    res.append(0)
-                else:
-                    if model.option_type == "call":
-                        res.append(max(path[-1] - model.K, 0))
-                    elif model.option_type == "put":
-                        res.append(max(model.K - path[-1], 0))
-            if res:
-                price = np.mean(res)
-    elif model.knock_type == "out":
+            for i in range(step_num):
+                check[np.where(paths[:, i] >= model.barrier_price)] = True
+        else:
+            for i in range(step_num):
+                check[np.where(paths[:, i] <= model.barrier_price)] = True
+        if model.option_type == "call":
+            payoff = paths[:, -1] - model.K
+        else:
+            payoff = model.K - paths[:, -1]
+        payoff = np.where(payoff > 0, payoff, 0)
+        price = np.where(check, payoff, 0)
+    else:
+        check = np.full(paths.shape[0], True)
         if model.barrier_type == "up":
-            if model.S0 >= model.barrier_price:
-                return 0
-            res = []
-            for path in paths:
-                if path[np.where(path >= model.barrier_price)].size != 0:
-                    res.append(0)
-                else:
-                    if model.option_type == "call":
-                        res.append(max(path[-1] - model.K, 0))
-                    elif model.option_type == "put":
-                        res.append(max(model.K - path[-1], 0))
-            if res:
-                price = np.mean(res)
-        elif model.barrier_type == "down":
-            if model.S0 <= model.barrier_price:
-                return 0
-            res = []
-            for path in paths:
-                if path[np.where(path <= model.barrier_price)].size != 0:
-                    res.append(0)
-                else:
-                    if model.option_type == "call":
-                        res.append(max(path[-1] - model.K, 0))
-                    elif model.option_type == "put":
-                        res.append(max(model.K - path[-1], 0))
-            if res:
-                price = np.mean(res)
-    return np.exp(-model.r * model.T) * price
+            for i in range(step_num):
+                check[np.where(paths[:, i] >= model.barrier_price)] = False
+        else:
+            for i in range(step_num):
+                check[np.where(paths[:, i] <= model.barrier_price)] = False
+        if model.option_type == "call":
+            payoff = paths[:, -1] - model.K
+        else:
+            payoff = model.K - paths[:, -1]
+        payoff = np.where(payoff > 0, payoff, 0)
+        price = np.where(check, payoff, 0)
+    price *= np.exp(-model.r * model.T)
+    return np.mean(price) 
 
 
 def gap_Monte_Carlo(model, paths):
@@ -128,18 +104,12 @@ def gap_Monte_Carlo(model, paths):
 
 
 def lookback_Monte_Carlo(model, paths):
-    res = []
-    for path in paths:
-        temp = path
-        if model.lookback_type == 'floating':
-            if model.option_type == "call":
-                res.append(temp[-1] - min(temp))
-            if model.option_type == 'put':
-                res.append(max(temp) - temp[-1])
-        if model.lookback_type == 'fixed':
-            if model.option_type == "put":
-                res.append(max(temp) - temp[-1])
-            if model.option_type == 'call':
-                res.append(max(temp) - temp[-1])
-    return np.exp(-model.r * model.T) * np.mean(res)
+    max_price = np.max(paths, axis=1)
+    min_price = np.min(paths, axis=1)
+    profit = 0
+    if model.option_type == "call":
+        profit = np.where(max_price-model.K>0, max_price-model.K, 0)
+    else:
+        profit = np.where(model.K-min_price>0, model.K-min_price, 0)
+    return np.mean(profit*np.exp(-model.r * model.T))
     

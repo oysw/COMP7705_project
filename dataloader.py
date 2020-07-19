@@ -88,11 +88,8 @@ def dataloader(option, random, sample_size, path_num=1000):
 
 def generate(path, amount, batch_nums):
     process_num = multiprocessing.cpu_count()
-    process_num = 1
-    # asset_type = ["GBM", "GBMSA"]
-    asset_type = ["GBMSA"]
-    # option_type = ["EU", "AM", "barrier", "gap", "lookback"]
-    option_type = ["gap"]
+    asset_type = ["GBM", "GBMSA"]
+    option_type = ["EU", "AM", "barrier", "gap", "lookback"]
 
     if not os.path.exists(path):
         os.makedirs(path)

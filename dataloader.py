@@ -22,7 +22,7 @@ def dataloader(option, random, sample_size, path_num=1000):
     config["initial_stock_price"] = param["initial_stock_price"] = np.array([S0 for i in range(sample_size)])
     config["strike_price"] = param["strike_price"] = np.round(param["initial_stock_price"] / moneyness, 1)
     # range: 1 day -> 3 year
-    config["maturity"] = param["maturity"] = np.round((1 + random.pop(0) * 1080) / 360, 6)
+    config["maturity"] = param["maturity"] = np.round((1 + random.pop(0) * 1080) / 360, 4)
     # range: 1% -> 3%
     config["interest_rate"] = param["interest_rate"] = np.round((1+random.pop(0)*2)/100, 3) 
     # range: 0% -> 3%
@@ -88,18 +88,14 @@ def dataloader(option, random, sample_size, path_num=1000):
 
 def generate(path, amount, batch_nums):
     process_num = multiprocessing.cpu_count()
+    process_num = 1
     # asset_type = ["GBM", "GBMSA"]
-    asset_type = ["GBM"]
+    asset_type = ["GBMSA"]
     # option_type = ["EU", "AM", "barrier", "gap", "lookback"]
-    option_type = ["EU"]
+    option_type = ["gap"]
 
     if not os.path.exists(path):
         os.makedirs(path)
-
-    gbmsa_data_path = os.path.join(path, "gbmsa_data.csv")
-    gbm_data_path = os.path.join(path, "gbm_data.csv")
-    gbmsa_label_path = os.path.join(path, "gbmsa_label.csv")
-    gbm_label_path = os.path.join(path, "gbm_label.csv")
 
     batch_size = amount // batch_nums // process_num
     print("Batch size is {}".format(batch_size))
@@ -122,16 +118,10 @@ def generate(path, amount, batch_nums):
                 feature, target = res.get()
                 features.extend(feature)
                 targets.extend(target)
-            if ass == "GBMSA":
-                data_df = pd.DataFrame(data=features)
-                data_df.to_csv(gbmsa_data_path, mode="a", index=None, header=False)
-                label_df = pd.DataFrame(data=targets)
-                label_df.to_csv(gbmsa_label_path, mode="a", index=None, header=False)
-            if ass == "GBM":
-                data_df = pd.DataFrame(data=features)
-                data_df.to_csv(gbm_data_path, mode="a", index=None, header=False)
-                label_df = pd.DataFrame(data=targets)
-                label_df.to_csv(gbm_label_path, mode="a", index=None, header=False)
+            data_df = pd.DataFrame(data=features)
+            data_df.to_csv(os.path.join(path, opt[0].upper() + "_" + ass + "_" + "data.csv"), mode="a", index=None, header=False)
+            label_df = pd.DataFrame(data=targets)
+            label_df.to_csv(os.path.join(path, opt[0].upper() + "_" + ass + "_" + "label.csv"), mode="a", index=None, header=False)
         print("Batch {} ends!".format(batch+1))
 
 

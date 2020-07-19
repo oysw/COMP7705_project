@@ -90,7 +90,7 @@ def gap_Monte_Carlo(model, paths):
                 else:
                     res.append(0)
         elif model.option_type == 'put':
-            if model.X2 < model.X1:
+            if model.X2 <= model.X1:
                 if temp[-1] < model.X2:
                     res.append(model.X1 - temp[-1])
                 else:
@@ -104,12 +104,17 @@ def gap_Monte_Carlo(model, paths):
 
 
 def lookback_Monte_Carlo(model, paths):
-    max_price = np.max(paths, axis=1)
-    min_price = np.min(paths, axis=1)
-    profit = 0
-    if model.option_type == "call":
-        profit = np.where(max_price-model.K>0, max_price-model.K, 0)
-    else:
-        profit = np.where(model.K-min_price>0, model.K-min_price, 0)
-    return np.mean(profit*np.exp(-model.r * model.T))
-    
+    res = []
+    for path in paths:
+        temp = path
+        if model.lookback_type == 'floating':
+            if model.option_type == "call":
+                res.append(temp[-1] - min(temp))
+            if model.option_type == 'put':
+                res.append(max(temp) - temp[-1])
+        if model.lookback_type == 'fixed':
+            if model.option_type == "put":
+                res.append(max(temp) - temp[-1])
+            if model.option_type == 'call':
+                res.append(max(temp) - temp[-1])
+    return np.exp(-model.r * model.T) * np.mean(res)

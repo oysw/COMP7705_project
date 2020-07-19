@@ -1,20 +1,45 @@
 from pricer import *
-from calculator import EU_Monte_Carlo
+from calculator import *
 import numpy as np
 import ghalton
 from scipy.stats import norm
+import multiprocessing
 
-gbm_model = GBM_EU(initial_stock_price=100, 
-    strike_price=120, 
-    maturity=456/365,
-    interest_rate=0.05,
+
+gbm_model = GBM_AM(
+    initial_stock_price=100, 
+    strike_price=110, 
+    maturity=182/365,
+    interest_rate=0.02,
     dividend_yield=0,
     option_type="put",
-    volatility=0.2)
+    volatility=0.1,
+    # knock_type="in",
+    # barrier_type="down",
+    # barrier_price=97,
+    )
+
+paths = gbm_model.stock_path(10000)
+res = AM_Monte_Carlo(gbm_model, paths)
+print(res)
+# from net import MonteCarloOptionPricing
+# model = MonteCarloOptionPricing(
+#     gbm_model.r, 
+#     gbm_model.S0,
+#     gbm_model.K,
+#     gbm_model.T,
+#     gbm_model.r,
+#     gbm_model.sigma,
+#     no_of_slices=gbm_model.T*360
+#     )
+# model.stock_price_simulation()
+# print(model.american_option_monte_carlo(option_type="put"))
+
+print(gbm_model.get(30000))
 # gbmsa_model = GBMSA_AM(
 #     initial_stock_price=100, 
-#     strike_price=105, 
-#     maturity=182/365,
+#     strike_price=110, 
+#     maturity=456/365,
 #     interest_rate=0.05,
 #     dividend_yield=0,
 #     option_type="call",
@@ -31,18 +56,3 @@ gbm_model = GBM_EU(initial_stock_price=100,
 #     long_term_variance=0.04,
 #     initial_variance=0.04
 #     )
-path_num = 16400
-def calc(path_num):
-    res = []
-    seed = 0
-    while path_num > 0:
-        if path_num > 1000:
-            paths = gbm_model.stock_path(seed, 1000)
-        else:
-            paths = gbm_model.stock_path(seed, path_num)
-        res.append(EU_Monte_Carlo(gbm_model, paths))
-        path_num -= 1000
-        seed += 1
-    return np.mean(res)
-print(calc(path_num))
-print(gbm_model.get(16400))

@@ -24,22 +24,19 @@ def AM_Monte_Carlo(model, paths):
     """
     price = np.zeros_like(paths)
     step_num = price.shape[1]
-    delta_t = model.T / step_num
+    delta_t = model.T / (step_num-1)
     if model.option_type == "call":
-        tmp = paths[:, -1] - model.K
-        price[:, -1] = np.where(tmp > 0, tmp, 0)
+        price = paths - model.K
+        price = np.where(price > 0, price, 0)
     elif model.option_type == "put":
-        tmp = model.K - paths[:, -1]
-        price[:, -1] = np.where(tmp > 0, tmp, 0)
-    for idx in range(2, step_num + 1):
+        price = model.K - paths
+        price = np.where(price > 0, price, 0)
+    for idx in range(2, step_num):
         back_val = np.exp(-model.r * delta_t) * price[:, -(idx - 1)]
-        c_val = np.zeros_like(back_val)
-        if model.option_type == "call":
-            c_val = paths[:, -idx] - model.K
-        elif model.option_type == "put":
-            c_val = model.K - paths[:, -idx]
-        price[:, -idx] = np.where(back_val > c_val, back_val, c_val)
-    return np.mean(price[:, 0])
+        rg = np.polyfit(paths[:, -idx], back_val, deg=2)
+        hold_val = np.polyval(rg, paths[:, -idx])
+        price[:, -idx] = np.where(hold_val > price[:, -idx], back_val, price[:, -idx])
+    return np.exp(-model.r * delta_t)*np.mean(price[:, 1])
 
 
 def barrier_Monte_Carlo(model, paths):

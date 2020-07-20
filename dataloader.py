@@ -5,6 +5,7 @@ import pandas as pd
 import itertools
 import multiprocessing
 import ghalton
+import progressbar
 
 keys = ("option", "type", "initial_stock_price", "strike_price", "maturity", "interest_rate", "dividend_yield",
     "volatility", "rate_of_mean_reversion", "correlation_of_stock_variance", "long_term_variance", "volatility_of_variance",
@@ -77,12 +78,15 @@ def dataloader(option, random, sample_size, path_num=1000):
     features = np.array(list(config.values())).T.tolist()
     target = []
     df = pd.DataFrame.from_dict(param)
+    bar = progressbar.ProgressBar(max_value=sample_size)
     for i in range(sample_size):
         init = df.iloc[i].to_dict()
         if hasattr(pricer, option):
             model = getattr(pricer, option)(**init)
         if model != 0:
             target.append(model.get(path_num))
+        bar.update(i+1)
+    bar.finish()
     return features, [round(i, 2) for i in target]
 
 
@@ -96,6 +100,7 @@ def generate(path, amount, batch_nums):
 
     batch_size = amount // batch_nums // process_num
     print("Batch size is {}".format(batch_size))
+    gen = ghalton.GeneralizedHalton(len(keys), 65)
 
     for batch in range(batch_nums):
         print("Batch {} begins!".format(batch+1))
@@ -103,7 +108,6 @@ def generate(path, amount, batch_nums):
             print("Begin generating " + ass + "_"+ opt + " data")
             p = multiprocessing.Pool(process_num)
             result = []
-            gen = ghalton.GeneralizedHalton(len(keys), 65)
             for i in range(process_num):
                 random = np.array(gen.get(batch_size))
                 result.append(p.apply_async(func=dataloader, args=(ass + "_" + opt, random, batch_size)))

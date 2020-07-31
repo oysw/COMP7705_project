@@ -127,4 +127,4 @@ def generate(path, amount, batch_nums):
 
 
 if __name__ == "__main__":
-    generate("result", 400000, 80)
+    generate("result", 400, 1)

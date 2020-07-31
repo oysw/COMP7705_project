@@ -39,7 +39,7 @@ class GBM(Pricer):
         super().__init__(**kwargs)
         self.sigma = volatility
 
-    def stock_path(self, path_num=1000):
+    def stock_path(self, path_num=10000):
         """
         @param path_num:
         @return: Simulation of the stock price.
@@ -82,7 +82,7 @@ class GBMSA(Pricer):
         self.sigma = volatility_of_variance
         self.v0 = initial_variance
 
-    def stock_path(self, path_num=1000):
+    def stock_path(self, path_num=10000):
         """
         @param path_num:
         @return: Simulation of the stock price.

@@ -11,7 +11,7 @@ keys = ("option", "type", "initial_stock_price", "strike_price", "maturity", "in
     "volatility", "rate_of_mean_reversion", "correlation_of_stock_variance", "long_term_variance", "volatility_of_variance",
     "knock_type", "barrier_type", "barrier_price", "trigger_price_1", "trigger_price_2", "lookback_type")
 
-def dataloader(option, random, sample_size, path_num=1000):
+def dataloader(option, random, sample_size, path_num=10000):
     model = 0
     S0 = 100
     random = [random[:, i] for i in range(len(keys))]
